@@ -1,0 +1,38 @@
+# tamu0
+# Calibration Anywhere by Main Street Autonomy
+# log: TAMU.Jeep_GC.White_Jeep.2025-04-16.17-20-11.01
+# 
+# Position xyz; Quaternions xyzw
+# [ x_m, y_m, z_m, qx, qy, qz, qw]
+camera_fl:
+  parent: "lidar_tc"
+  child: "camera_fl"
+  value: [1.208815, 0.273073, -0.842512, -0.491530, 0.531214, -0.511528, 0.463194]
+camera_rc_arena_camera_node:
+  parent: "lidar_tc"
+  child: "camera_rc_arena_camera_node"
+  value: [-0.868880, -0.067574, -0.393253, -0.569404, -0.500364, 0.481671, 0.439781]
+camera_tl_arena_camera_node:
+  parent: "lidar_tc"
+  child: "camera_tl_arena_camera_node"
+  value: [0.884644, 0.503658, -0.445198, -0.617370, -0.457440, 0.315877, 0.556620]
+camera_tr_arena_camera_node:
+  parent: "lidar_tc"
+  child: "camera_tr_arena_camera_node"
+  value: [0.779199, -0.690587, -0.436135, -0.437743, -0.591724, 0.551067, 0.393152]
+gps_imu:
+  parent: "lidar_tc"
+  child: "gps_imu"
+  value: [-0.625577, 0.288784, -0.842490, 0.002484, -0.000185, -0.033067, 0.999450]
+imu:
+  parent: "lidar_tc"
+  child: "imu"
+  value: [-0.658274, 0.159162, -0.687196, 0.002018, 0.001691, -0.742414, 0.669936]
+lidar_tl:
+  parent: "lidar_tc"
+  child: "lidar_tl"
+  value: [0.094656, 0.595837, -0.443078, -0.237755, 0.240213, 0.610386, 0.716379]
+lidar_tr:
+  parent: "lidar_tc"
+  child: "lidar_tr"
+  value: [-0.045790, -0.591771, -0.420407, 0.158471, 0.138444, -0.720141, 0.661148]
