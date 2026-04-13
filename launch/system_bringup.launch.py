@@ -290,7 +290,8 @@ def _rear_camera_1_action(context):
             executable="start",
             namespace="camera_rear_1",
             name="arena_camera_node",
-            output="screen",
+            output="log",
+            arguments=["--ros-args", "--log-level", "warn"],
             parameters=[
                 {
                     "topic": "/camera_rear_1/image",
@@ -328,7 +329,8 @@ def _rear_camera_2_action(context):
             executable="start",
             namespace="camera_rear_2",
             name="arena_camera_node",
-            output="screen",
+            output="log",
+            arguments=["--ros-args", "--log-level", "warn"],
             parameters=[
                 {
                     "topic": "/camera_rear_2/image",
@@ -366,7 +368,8 @@ def _rear_camera_3_action(context):
             executable="start",
             namespace="camera_rear_3",
             name="arena_camera_node",
-            output="screen",
+            output="log",
+            arguments=["--ros-args", "--log-level", "warn"],
             parameters=[
                 {
                     "topic": "/camera_rear_3/image",
