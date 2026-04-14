@@ -16,6 +16,7 @@
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>carma_driver_msgs</exec_depend>
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>avt_vimba_camera</exec_depend>
 
@@ -24,6 +25,7 @@
   <exec_depend>velodyne_laserscan</exec_depend>
   <exec_depend>novatel_oem7_driver</exec_depend>
   <exec_depend>v2x_ros_driver</exec_depend>
+  <exec_depend>j2735_v2x_msgs</exec_depend>
   <exec_depend>arena_camera_node</exec_depend>
   <exec_depend>raptor_dbw_can</exec_depend>
   <exec_depend>rmw_zenoh_cpp</exec_depend>

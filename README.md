@@ -41,6 +41,14 @@ ros2 launch vehicle_platform system_bringup.launch.py
 | `rear_auto_exposure_target` | `50.0` | Rear auto exposure target brightness (0–100) |
 | `rear_camera_frame_rate_hz` | `15.0` | Rear camera frame rate |
 | `enable_zenohd` | `true` | Start rmw_zenohd |
+| `enable_map_odom_tf` | `true` | Enable dynamic `map -> odom` TF from NovAtel odom + GPS |
+| `map_use_fixed_reference` | `true` | Keep `map` anchored to fixed global LLA origin |
+| `map_fixed_reference_lat_deg` | `30.63789534` | Fixed global map origin latitude |
+| `map_fixed_reference_lon_deg` | `-96.47777581` | Fixed global map origin longitude |
+| `map_fixed_reference_alt_m` | `55.09027857` | Fixed global map origin altitude (m) |
+| `map_anchor_mode` | `gps_fallback` | Anchor behavior (`gps_fallback`, `map_then_lock`, `map_only`) |
+| `map_anchor_topic` | `/message/incoming_map` | Decoded MAP topic used when MAP anchor modes are selected |
+| `inbound_map_anchor_topic` | `/comms/inbound_binary_msg` | Raw V2X topic used when MAP anchor modes are selected |
 
 ## Config files
 
@@ -63,4 +71,23 @@ Rear cameras publish under `/camera_rear_1/`, `/camera_rear_2/`, `/camera_rear_3
 
 ```bash
 colcon build --packages-select vehicle_platform
+```
+
+## TF defaults and global frame behavior
+
+`system_bringup.launch.py` now defaults to a fixed global map anchor so V2X
+markers and vehicle pose can share one stable global frame.
+
+Default runtime TF chain:
+
+- `map -> odom` (dynamic, from `map_odom_tf_from_gps.py`)
+- `odom -> lidar_tc` (dynamic, from NovAtel odometry)
+- `lidar_tc -> base_link` (static identity alias for standard vehicle frame)
+
+This means both `map -> lidar_tc` and `map -> base_link` are available.
+
+If needed, you can still switch to MAP-driven anchoring by overriding:
+
+```bash
+map_use_fixed_reference:=false map_anchor_mode:=map_then_lock
 ```

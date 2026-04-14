@@ -40,3 +40,7 @@ delphi_esr_radar:
   parent: "lidar_tc"
   child: "delphi_esr_radar"
   value: [2.915, -0.65, -1.974, 0.0, 0.0, -0.047482, 0.998872]
+base_link:
+  parent: "lidar_tc"
+  child: "base_link"
+  value: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
