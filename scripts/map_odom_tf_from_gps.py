@@ -168,6 +168,15 @@ class MapOdomTfFromGps(Node):
         )
         self.allow_anchor_relock = bool(self.declare_parameter("allow_anchor_relock", False).value)
         self.reanchor_distance_m = float(self.declare_parameter("reanchor_distance_m", 150.0).value)
+        self.publish_direct_map_to_odom_child_tf = bool(
+            self.declare_parameter("publish_direct_map_to_odom_child_tf", True).value
+        )
+        self.direct_map_to_odom_child_use_odom_z = bool(
+            self.declare_parameter("direct_map_to_odom_child_use_odom_z", False).value
+        )
+        self.publish_odom_to_odom_child_tf = bool(
+            self.declare_parameter("publish_odom_to_odom_child_tf", False).value
+        )
 
         self._ref_lla: Optional[Tuple[float, float, float]] = None
         self._gps_pos_map: Optional[Tuple[float, float, float]] = None
@@ -213,6 +222,16 @@ class MapOdomTfFromGps(Node):
                 self.inbound_map_anchor_topic,
                 str(self.allow_anchor_relock),
                 self.reanchor_distance_m,
+            )
+        )
+        self.get_logger().info(
+            "Direct map->%s TF from odom=%s (use_odom_z=%s), odom->%s TF=%s"
+            % (
+                self.odom_child_frame,
+                str(self.publish_direct_map_to_odom_child_tf),
+                str(self.direct_map_to_odom_child_use_odom_z),
+                self.odom_child_frame,
+                str(self.publish_odom_to_odom_child_tf),
             )
         )
         if self.use_fixed_reference:
@@ -378,7 +397,28 @@ class MapOdomTfFromGps(Node):
         self._gps_pos_map = (x_east, y_north, z)
 
     def _publish_tf(self) -> None:
-        if self._gps_pos_map is None or self._odom_pos is None or self._odom_quat is None:
+        if self._odom_pos is None or self._odom_quat is None:
+            return
+
+        stamp = self.get_clock().now().to_msg()
+
+        if self.publish_direct_map_to_odom_child_tf and self.odom_child_frame != self.map_frame:
+            direct_tf = TransformStamped()
+            direct_tf.header.stamp = stamp
+            direct_tf.header.frame_id = self.map_frame
+            direct_tf.child_frame_id = self.odom_child_frame
+            direct_tf.transform.translation.x = self._odom_pos[0]
+            direct_tf.transform.translation.y = self._odom_pos[1]
+            # Keep direct map->odom_child on ground plane by default so map markers at z=0
+            # align vertically with vehicle unless explicit odom Z is requested.
+            direct_tf.transform.translation.z = self._odom_pos[2] if self.direct_map_to_odom_child_use_odom_z else 0.0
+            direct_tf.transform.rotation.x = self._odom_quat[0]
+            direct_tf.transform.rotation.y = self._odom_quat[1]
+            direct_tf.transform.rotation.z = self._odom_quat[2]
+            direct_tf.transform.rotation.w = self._odom_quat[3]
+            self._tf_broadcaster.sendTransform(direct_tf)
+
+        if self._gps_pos_map is None:
             return
 
         q_map_base = self._odom_quat
@@ -396,7 +436,7 @@ class MapOdomTfFromGps(Node):
         )
 
         tf_msg = TransformStamped()
-        tf_msg.header.stamp = self.get_clock().now().to_msg()
+        tf_msg.header.stamp = stamp
         tf_msg.header.frame_id = self.map_frame
         tf_msg.child_frame_id = self.odom_frame
         tf_msg.transform.translation.x = p_map_odom[0]
@@ -409,8 +449,11 @@ class MapOdomTfFromGps(Node):
 
         self._tf_broadcaster.sendTransform(tf_msg)
 
+        if not self.publish_odom_to_odom_child_tf:
+            return
+
         odom_child_tf = TransformStamped()
-        odom_child_tf.header.stamp = tf_msg.header.stamp
+        odom_child_tf.header.stamp = stamp
         odom_child_tf.header.frame_id = self.odom_frame
         odom_child_tf.child_frame_id = self.odom_child_frame
         odom_child_tf.transform.translation.x = self._odom_pos[0]

@@ -598,7 +598,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "map_frame",
-                default_value="map",
+                default_value="world",
                 description="Global frame id for dynamic map->odom TF",
             ),
             DeclareLaunchArgument(
@@ -672,6 +672,21 @@ def generate_launch_description():
                 description="If true, include GPS altitude delta in map->odom translation",
             ),
             DeclareLaunchArgument(
+                "map_publish_direct_map_to_odom_child_tf",
+                default_value="true",
+                description="If true, publish dynamic map->odom_child TF directly from Novatel odom pose",
+            ),
+            DeclareLaunchArgument(
+                "map_direct_map_to_odom_child_use_odom_z",
+                default_value="false",
+                description="If true, use Novatel odom Z in direct map->odom_child TF (otherwise force z=0)",
+            ),
+            DeclareLaunchArgument(
+                "map_publish_odom_to_odom_child_tf",
+                default_value="false",
+                description="If true, additionally publish odom->odom_child TF from Novatel odom pose",
+            ),
+            DeclareLaunchArgument(
                 "enable_delphi_esr",
                 default_value="true",
                 description="Enable Delphi ESR 2.5 radar bringup",
@@ -743,7 +758,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "v2x_visualization_frame",
-                default_value="map",
+                default_value="world",
                 description="TF frame used by V2X MAP/SPAT/BSM/PSM/TIM marker visualization",
             ),
             DeclareLaunchArgument(
@@ -934,6 +949,9 @@ def generate_launch_description():
                         "anchor_mode": LaunchConfiguration("map_anchor_mode"),
                         "map_anchor_topic": LaunchConfiguration("map_anchor_topic"),
                         "inbound_map_anchor_topic": LaunchConfiguration("inbound_map_anchor_topic"),
+                        "publish_direct_map_to_odom_child_tf": LaunchConfiguration("map_publish_direct_map_to_odom_child_tf"),
+                        "direct_map_to_odom_child_use_odom_z": LaunchConfiguration("map_direct_map_to_odom_child_use_odom_z"),
+                        "publish_odom_to_odom_child_tf": LaunchConfiguration("map_publish_odom_to_odom_child_tf"),
                         "allow_anchor_relock": False,
                         "reanchor_distance_m": 150.0,
                     }
