@@ -633,7 +633,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "map_use_fixed_reference",
-                default_value="true",
+                default_value="false",
                 description="If true, keep map frame anchored at fixed global LLA origin",
             ),
             DeclareLaunchArgument(
@@ -753,12 +753,12 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "enable_safety_alert_bridge",
-                default_value="true",
+                default_value="false",
                 description="Enable SDK-backed V2X safety alert bridge publishing /v2x/safety_alerts",
             ),
             DeclareLaunchArgument(
                 "enable_native_safety_alert_bridge",
-                default_value="false",
+                default_value="true",
                 description="Enable native C++ Commsignia app-notif safety bridge (requires SDK-enabled build)",
             ),
             DeclareLaunchArgument(
