@@ -653,7 +653,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "map_anchor_mode",
-                default_value="map_then_lock",
+                default_value="map_only",
                 description="Map anchor mode for TF node: gps_fallback | map_then_lock | map_only",
             ),
             DeclareLaunchArgument(
