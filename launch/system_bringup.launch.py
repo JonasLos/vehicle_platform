@@ -818,7 +818,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "v2x_safety_bridge_derive_cff_only",
-                default_value="true",
+                default_value="false",
                 description="If true, publish only alerts derived from CFF/collision indicators",
             ),
             DeclareLaunchArgument(
