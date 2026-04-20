@@ -413,13 +413,13 @@ def generate_launch_description():
     front_camera_params_default = os.path.join(config_dir, "avt_mako_15hz.yaml")
 
     lidar_tl_driver_params = os.path.join(
-        velodyne_driver_share, "config", "Lidar_tl_VLP16-velodyne_driver_node-params.yaml"
+        config_dir, "lidar_tl_velodyne_driver_node-params.yaml"
     )
     lidar_tr_driver_params = os.path.join(
-        velodyne_driver_share, "config", "Lidar_tr_VLP16-velodyne_driver_node-params.yaml"
+        config_dir, "lidar_tr_velodyne_driver_node-params.yaml"
     )
     lidar_tc_driver_params = os.path.join(
-        velodyne_driver_share, "config", "VLP32C-velodyne_driver_node-params.yaml"
+        config_dir, "lidar_tc_velodyne_driver_node-params.yaml"
     )
 
     novatel_launch = os.path.join(novatel_share, "launch", "oem7_net.launch.py")
@@ -926,6 +926,22 @@ def generate_launch_description():
             OpaqueFunction(function=_rear_image_proc_3_action),
             IncludeLaunchDescription(PythonLaunchDescriptionSource(extrinsics_launch)),
             IncludeLaunchDescription(PythonLaunchDescriptionSource(dbw_launch)),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(delphi_launch),
+                condition=IfCondition(LaunchConfiguration("enable_delphi_esr")),
+                launch_arguments={
+                    "namespace": LaunchConfiguration("delphi_namespace"),
+                    "params": LaunchConfiguration("delphi_params"),
+                    "hardware_id": LaunchConfiguration("delphi_hardware_id"),
+                    "circuit_id": LaunchConfiguration("delphi_circuit_id"),
+                    "bit_rate": LaunchConfiguration("delphi_bit_rate"),
+                    "enable_echo": LaunchConfiguration("delphi_enable_echo"),
+                    "tx_enable": LaunchConfiguration("delphi_tx_enable"),
+                    "tx_rate_hz": LaunchConfiguration("delphi_tx_rate_hz"),
+                    "open_rviz": "false",
+                }.items(),
+            ),
+            OpaqueFunction(function=_rviz_action),
             Node(
                 package="vehicle_platform",
                 executable="map_odom_tf_from_gps.py",
@@ -957,21 +973,5 @@ def generate_launch_description():
                     }
                 ],
             ),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(delphi_launch),
-                condition=IfCondition(LaunchConfiguration("enable_delphi_esr")),
-                launch_arguments={
-                    "namespace": LaunchConfiguration("delphi_namespace"),
-                    "params": LaunchConfiguration("delphi_params"),
-                    "hardware_id": LaunchConfiguration("delphi_hardware_id"),
-                    "circuit_id": LaunchConfiguration("delphi_circuit_id"),
-                    "bit_rate": LaunchConfiguration("delphi_bit_rate"),
-                    "enable_echo": LaunchConfiguration("delphi_enable_echo"),
-                    "tx_enable": LaunchConfiguration("delphi_tx_enable"),
-                    "tx_rate_hz": LaunchConfiguration("delphi_tx_rate_hz"),
-                    "open_rviz": "false",
-                }.items(),
-            ),
-            OpaqueFunction(function=_rviz_action),
         ]
     )
