@@ -767,11 +767,6 @@ def generate_launch_description():
                 description="Delay in seconds before running v2x lifecycle configure",
             ),
             DeclareLaunchArgument(
-                "enable_safety_alert_bridge",
-                default_value="false",
-                description="Enable SDK-backed V2X safety alert bridge publishing /v2x/safety_alerts",
-            ),
-            DeclareLaunchArgument(
                 "enable_native_safety_alert_bridge",
                 default_value="true",
                 description="Enable native C++ Commsignia app-notif safety bridge (requires SDK-enabled build)",
@@ -842,6 +837,11 @@ def generate_launch_description():
                 description="TTC threshold at or below which alert severity is warning",
             ),
             DeclareLaunchArgument(
+                "enable_dbw_lights_sti_bridge",
+                default_value="true",
+                description="Enable DBW vehicle state to Commsignia STI bridge",
+            ),
+            DeclareLaunchArgument(
                 "v2x_global_params_override_file",
                 default_value=v2x_override_file,
                 description="Path to v2x global override file (set listening_port to match OBU mode)",
@@ -894,8 +894,8 @@ def generate_launch_description():
                     "configuration_delay": LaunchConfiguration("v2x_configuration_delay"),
                     "enable_map_spat_visualizer": LaunchConfiguration("enable_map_spat_visualizer"),
                     "enable_inbound_binary_visualizer": LaunchConfiguration("enable_inbound_binary_visualizer"),
-                    "enable_safety_alert_bridge": LaunchConfiguration("enable_safety_alert_bridge"),
                     "enable_native_safety_alert_bridge": LaunchConfiguration("enable_native_safety_alert_bridge"),
+                    "enable_dbw_lights_sti_bridge": LaunchConfiguration("enable_dbw_lights_sti_bridge"),
                     "safety_alert_abbrev_overlay_topic": LaunchConfiguration("v2x_safety_alert_abbrev_overlay_topic"),
                     "safety_alert_enable_abbrev_overlay": LaunchConfiguration("v2x_safety_alert_enable_abbrev_overlay"),
                     "safety_bridge_obu_host": LaunchConfiguration("v2x_safety_bridge_obu_host"),
