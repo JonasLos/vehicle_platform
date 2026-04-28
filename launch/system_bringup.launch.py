@@ -842,6 +842,21 @@ def generate_launch_description():
                 description="Enable DBW vehicle state to Commsignia STI bridge",
             ),
             DeclareLaunchArgument(
+                "v2x_dbw_sti_obu_host",
+                default_value="192.168.0.54",
+                description="OBU host IP for the DBW STI bridge session",
+            ),
+            DeclareLaunchArgument(
+                "v2x_dbw_sti_obu_port",
+                default_value="7942",
+                description="OBU STI API port for the DBW bridge",
+            ),
+            DeclareLaunchArgument(
+                "v2x_dbw_sti_reconnect_delay",
+                default_value="2.0",
+                description="Reconnect delay in seconds for the DBW STI bridge",
+            ),
+            DeclareLaunchArgument(
                 "v2x_global_params_override_file",
                 default_value=v2x_override_file,
                 description="Path to v2x global override file (set listening_port to match OBU mode)",
@@ -896,6 +911,9 @@ def generate_launch_description():
                     "enable_inbound_binary_visualizer": LaunchConfiguration("enable_inbound_binary_visualizer"),
                     "enable_native_safety_alert_bridge": LaunchConfiguration("enable_native_safety_alert_bridge"),
                     "enable_dbw_lights_sti_bridge": LaunchConfiguration("enable_dbw_lights_sti_bridge"),
+                    "dbw_sti_obu_host": LaunchConfiguration("v2x_dbw_sti_obu_host"),
+                    "dbw_sti_obu_port": LaunchConfiguration("v2x_dbw_sti_obu_port"),
+                    "dbw_sti_reconnect_delay": LaunchConfiguration("v2x_dbw_sti_reconnect_delay"),
                     "safety_alert_abbrev_overlay_topic": LaunchConfiguration("v2x_safety_alert_abbrev_overlay_topic"),
                     "safety_alert_enable_abbrev_overlay": LaunchConfiguration("v2x_safety_alert_enable_abbrev_overlay"),
                     "safety_bridge_obu_host": LaunchConfiguration("v2x_safety_bridge_obu_host"),
