@@ -3,11 +3,21 @@
     feature/AcquisitionFrameRateAbs: 15.0
     feature/StreamFrameRateConstrain: true
     feature/TriggerMode: 'Off'
+    feature/BalanceWhiteAuto: 'Continuous'
     feature/ExposureAuto: 'Continuous'
     feature/ExposureAutoAlg: Mean
     feature/ExposureAutoAdjustTol: 5
     feature/ExposureAutoRate: 100
     feature/ExposureAutoTarget: 50
-    feature/ExposureAutoMin: 100
-    feature/ExposureAutoMax: 60000
+    feature/ExposureAutoMin: 500
+    feature/ExposureAutoMax: 20000
     feature/ExposureMode: Timed
+    feature/GainAuto: 'Continuous'
+    feature/GainAutoAdjustTol: 5
+    feature/GainAutoRate: 100
+    feature/GainAutoTarget: 50
+    feature/GainAutoMin: 0.0
+    feature/GainAutoMax: 12.0
+    feature/Gamma: 1.0
+    feature/Hue: 0.0
+    feature/Saturation: 1.0

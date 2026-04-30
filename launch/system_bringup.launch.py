@@ -87,6 +87,7 @@ def _front_camera_fl_action(context):
                 "ip": LaunchConfiguration("front_camera_fl_ip").perform(context),
                 "camera_info_url": LaunchConfiguration("front_camera_fl_info_url").perform(context),
                 "params_file": LaunchConfiguration("front_camera_params_file").perform(context),
+                "use_measurement_time": "false",
                 "image_proc": "false",
             }.items(),
         )
@@ -114,6 +115,7 @@ def _front_camera_fr_action(context):
                 "frame_id": "camera_fr",
                 "ip": LaunchConfiguration("front_camera_fr_ip").perform(context),
                 "params_file": LaunchConfiguration("front_camera_params_file").perform(context),
+                "use_measurement_time": "false",
                 "image_proc": "false",
             }.items(),
         )
