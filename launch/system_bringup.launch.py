@@ -725,7 +725,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "delphi_tx_enable",
-                default_value="false",
+                default_value="True",
                 description="Enable Delphi ESR command TX (0x4F0/0x4F1)",
             ),
             DeclareLaunchArgument(
@@ -844,6 +844,16 @@ def generate_launch_description():
                 description="Enable DBW vehicle state to Commsignia STI bridge",
             ),
             DeclareLaunchArgument(
+                "enable_rtor_node",
+                default_value="true",
+                description="Enable the V2X RTOR (right-turn-on-red) hazard node",
+            ),
+            DeclareLaunchArgument(
+                "v2x_rtor_allow_alerts_without_map_right_turn",
+                default_value="false",
+                description="If true, allow RTOR alerts even when MAP lane maneuver data says right turn is not allowed",
+            ),
+            DeclareLaunchArgument(
                 "v2x_dbw_sti_obu_host",
                 default_value="192.168.0.54",
                 description="OBU host IP for the DBW STI bridge session",
@@ -913,6 +923,7 @@ def generate_launch_description():
                     "enable_inbound_binary_visualizer": LaunchConfiguration("enable_inbound_binary_visualizer"),
                     "enable_native_safety_alert_bridge": LaunchConfiguration("enable_native_safety_alert_bridge"),
                     "enable_dbw_lights_sti_bridge": LaunchConfiguration("enable_dbw_lights_sti_bridge"),
+                    "enable_rtor_node": LaunchConfiguration("enable_rtor_node"),
                     "dbw_sti_obu_host": LaunchConfiguration("v2x_dbw_sti_obu_host"),
                     "dbw_sti_obu_port": LaunchConfiguration("v2x_dbw_sti_obu_port"),
                     "dbw_sti_reconnect_delay": LaunchConfiguration("v2x_dbw_sti_reconnect_delay"),
@@ -929,6 +940,7 @@ def generate_launch_description():
                     "safety_bridge_dedupe_window_sec": LaunchConfiguration("v2x_safety_bridge_dedupe_window_sec"),
                     "safety_bridge_critical_ttc_sec": LaunchConfiguration("v2x_safety_bridge_critical_ttc_sec"),
                     "safety_bridge_warning_ttc_sec": LaunchConfiguration("v2x_safety_bridge_warning_ttc_sec"),
+                    "rtor_allow_alerts_without_map_right_turn": LaunchConfiguration("v2x_rtor_allow_alerts_without_map_right_turn"),
                     "inbound_marker_topic": LaunchConfiguration("v2x_inbound_marker_topic"),
                     "visualization_frame_id": LaunchConfiguration("v2x_visualization_frame"),
                     "global_params_override_file": LaunchConfiguration("v2x_global_params_override_file"),

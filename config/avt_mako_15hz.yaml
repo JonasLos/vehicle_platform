@@ -1,6 +1,6 @@
 /**:
   ros__parameters:
-    feature/AcquisitionFrameRateAbs: 15.0
+    feature/AcquisitionFrameRateAbs: 10.0
     feature/StreamFrameRateConstrain: true
     feature/TriggerMode: 'Off'
     feature/BalanceWhiteAuto: 'Continuous'
@@ -8,7 +8,7 @@
     feature/ExposureAutoAlg: Mean
     feature/ExposureAutoAdjustTol: 5
     feature/ExposureAutoRate: 100
-    feature/ExposureAutoTarget: 50
+    feature/ExposureAutoTarget: 60
     feature/ExposureAutoMin: 500
     feature/ExposureAutoMax: 20000
     feature/ExposureMode: Timed
