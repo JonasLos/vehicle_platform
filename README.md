@@ -51,6 +51,7 @@ ros2 launch vehicle_platform system_bringup.launch.py
 | `inbound_map_anchor_topic` | `/comms/inbound_binary_msg` | Raw V2X topic used when MAP anchor modes are selected |
 | `enable_safety_alert_bridge` | `true` | Enable Python SDK-based V2X safety alert bridge |
 | `enable_native_safety_alert_bridge` | `false` | Enable native C++ app-notif V2X safety alert bridge |
+| `v2x_log_level` | `WARN` | Log level passed to `v2x_ros_driver` (`DEBUG`, `INFO`, `WARN`, `ERROR`) |
 | `v2x_safety_alert_enable_abbrev_overlay` | `true` | Enable RViz 2D overlay text for safety alert abbreviations |
 | `v2x_safety_alert_abbrev_overlay_topic` | `/v2x/safety_alert_overlay_text` | RViz 2D overlay topic for active safety alert abbreviation text |
 | `v2x_safety_bridge_obu_host` | `192.168.0.54` | OBU host IP for safety bridge connection |

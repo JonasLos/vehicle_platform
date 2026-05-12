@@ -286,6 +286,26 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /v2x/safety_alert_overlay_text
       Value: true
+    - Class: rviz_2d_overlay_plugins/TextOverlay
+      Enabled: true
+      Name: V2X RTOR Overlay
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /v2x/rtor_overlay_text
+      Value: true
+    - Class: rviz_2d_overlay_plugins/TextOverlay
+      Enabled: true
+      Name: V2X RTOR VRU Overlay
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /v2x/rtor_vru_overlay_text
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48

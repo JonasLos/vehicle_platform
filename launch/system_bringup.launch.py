@@ -769,6 +769,11 @@ def generate_launch_description():
                 description="Delay in seconds before running v2x lifecycle configure",
             ),
             DeclareLaunchArgument(
+                "v2x_log_level",
+                default_value="WARN",
+                description="Log level for v2x_ros_driver nodes (DEBUG, INFO, WARN, ERROR)",
+            ),
+            DeclareLaunchArgument(
                 "enable_native_safety_alert_bridge",
                 default_value="true",
                 description="Enable native C++ Commsignia app-notif safety bridge (requires SDK-enabled build)",
@@ -917,6 +922,7 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(v2x_launch),
                 launch_arguments={
+                    "log_level": LaunchConfiguration("v2x_log_level"),
                     "enable_v2x_driver_lifecycle": LaunchConfiguration("enable_v2x_driver_lifecycle"),
                     "configuration_delay": LaunchConfiguration("v2x_configuration_delay"),
                     "enable_map_spat_visualizer": LaunchConfiguration("enable_map_spat_visualizer"),
