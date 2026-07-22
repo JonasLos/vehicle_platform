@@ -247,6 +247,28 @@ def _rear_image_proc_3_action(context):
     ]
 
 
+def _grid_convergence_corrector_action(context):
+    enable_corrector = LaunchConfiguration("enable_grid_convergence_corrector").perform(context).lower()
+    if enable_corrector not in ["true", "1", "yes", "on"]:
+        return []
+
+    return [
+        Node(
+            package="vehicle_platform",
+            executable="grid_convergence_corrector.py",
+            name="grid_convergence_corrector",
+            output="screen",
+            parameters=[
+                {
+                    "central_meridian_deg": LaunchConfiguration("grid_convergence_central_meridian_deg"),
+                    "in_topic": LaunchConfiguration("novatel_odom_topic"),
+                    "out_topic": LaunchConfiguration("grid_convergence_odom_topic"),
+                }
+            ],
+        )
+    ]
+
+
 def _rviz_action(context):
     enable_rviz = LaunchConfiguration("enable_rviz").perform(context).lower()
     if enable_rviz not in ["true", "1", "yes", "on"]:
@@ -629,6 +651,21 @@ def generate_launch_description():
                 description="Novatel GPS topic (NavSatFix) used as map anchor source",
             ),
             DeclareLaunchArgument(
+                "enable_grid_convergence_corrector",
+                default_value="true",
+                description="Publish a grid-convergence-corrected copy of Novatel odom (true-north yaw -> UTM grid north)",
+            ),
+            DeclareLaunchArgument(
+                "grid_convergence_odom_topic",
+                default_value="/novatel/oem7/odom_grid",
+                description="Output topic for grid-convergence-corrected Novatel odometry (raw odom is unchanged)",
+            ),
+            DeclareLaunchArgument(
+                "grid_convergence_central_meridian_deg",
+                default_value="-99.0",
+                description="UTM zone central meridian (deg) used for grid convergence correction (zone 14 at RELLIS)",
+            ),
+            DeclareLaunchArgument(
                 "map_odom_tf_rate_hz",
                 default_value="20.0",
                 description="Publish rate for dynamic map->odom TF",
@@ -954,6 +991,7 @@ def generate_launch_description():
                     "oem7_port": "3004",
                 }.items(),
             ),
+            OpaqueFunction(function=_grid_convergence_corrector_action),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(v2x_launch),
                 launch_arguments={
