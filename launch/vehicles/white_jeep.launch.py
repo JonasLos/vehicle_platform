@@ -1045,7 +1045,20 @@ def generate_launch_description():
             OpaqueFunction(function=_rear_image_proc_2_action),
             OpaqueFunction(function=_rear_image_proc_3_action),
             IncludeLaunchDescription(PythonLaunchDescriptionSource(extrinsics_launch)),
-            IncludeLaunchDescription(PythonLaunchDescriptionSource(dbw_launch)),
+            # White jeep DBW Kvaser serial differs from the raptor package default
+            # (blue jeep), so pass this vehicle's params file. Scoped so the
+            # 'params' argument cannot leak into the delphi include below.
+            GroupAction(
+                scoped=True,
+                actions=[
+                    IncludeLaunchDescription(
+                        PythonLaunchDescriptionSource(dbw_launch),
+                        launch_arguments={
+                            "params": os.path.join(config_dir, "raptor_dbw_can_params.yaml"),
+                        }.items(),
+                    )
+                ],
+            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(delphi_launch),
                 condition=IfCondition(LaunchConfiguration("enable_delphi_esr")),
