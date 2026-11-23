@@ -1,0 +1,14 @@
+# Calibration Anywhere by Main Street Autonomy
+# log: TAMU.Jeep_GC.Blue_Jeep.2026-10-28.16-25-44.01
+# Time offsets are listed in seconds.
+/novatel/oem7/imu/data_raw: 0
+/lidar_tc/velodyne_packets: 0.020380975000000003
+/lidar_tl/velodyne_packets: 0.020192915999999998
+/lidar_tr/velodyne_packets: 0.019744483
+/camera_fl/image_color/compressed: -0.011588830000000001
+/camera_fr/image_color/compressed: -0.011659151
+/camera_rear_1/image_color/compressed: -0.046007988
+/camera_rear_2/image_color/compressed: -0.046003895000000003
+/camera_rear_3/image_color/compressed: -0.045888084000000003
+/camera_rear_4/image_color/compressed: -0.045537721000000003
+/camera_rear_5/image_color/compressed: -0.045236433000000006

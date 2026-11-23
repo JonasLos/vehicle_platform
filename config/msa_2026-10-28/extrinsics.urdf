@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<?xml-model href="https://raw.githubusercontent.com/ros/urdfdom/master/xsd/urdf.xsd" ?>
+<robot name="tamu_jeep_gc.nominal" xmlns="http://www.ros.org">
+  <link name="camera_fl"/>
+  <link name="camera_fr"/>
+  <link name="camera_rear_1"/>
+  <link name="camera_rear_2"/>
+  <link name="camera_rear_3"/>
+  <link name="camera_rear_4"/>
+  <link name="camera_rear_5"/>
+  <link name="lidar_tc_velodyne"/>
+  <link name="lidar_tl_velodyne"/>
+  <link name="lidar_tr_velodyne"/>
+  <link name="novatel_imu"/>
+  <joint name="camera_fr_joint" type="fixed">
+    <origin xyz="0.660471 0.0496035 -0.0219662" rpy="0.0152382 0.0548531 0.0884809"/>
+    <parent link="camera_fl"/>
+    <child link="camera_fr"/>
+  </joint>
+  <joint name="camera_rear_1_joint" type="fixed">
+    <origin xyz="-0.269152 -0.372202 -0.41761" rpy="-2.63367 -0.772287 1.72862"/>
+    <parent link="camera_fl"/>
+    <child link="camera_rear_1"/>
+  </joint>
+  <joint name="camera_rear_2_joint" type="fixed">
+    <origin xyz="0.394435 -0.358691 -2.29135" rpy="-0.360956 -2.98651 0.0985272"/>
+    <parent link="camera_fl"/>
+    <child link="camera_rear_2"/>
+  </joint>
+  <joint name="camera_rear_3_joint" type="fixed">
+    <origin xyz="0.976444 -0.31586 -0.437767" rpy="0.370857 2.65212 1.28637"/>
+    <parent link="camera_fl"/>
+    <child link="camera_rear_3"/>
+  </joint>
+  <joint name="camera_rear_4_joint" type="fixed">
+    <origin xyz="-0.349242 -0.340549 -1.95208" rpy="-2.74289 -2.8453 1.88309"/>
+    <parent link="camera_fl"/>
+    <child link="camera_rear_4"/>
+  </joint>
+  <joint name="camera_rear_5_joint" type="fixed">
+    <origin xyz="1.00845 -0.253862 -1.95745" rpy="0.38047 0.377987 1.38677"/>
+    <parent link="camera_fl"/>
+    <child link="camera_rear_5"/>
+  </joint>
+  <joint name="lidar_tc_velodyne_joint" type="fixed">
+    <origin xyz="0.368658 -0.804755 -1.37591" rpy="-1.13539 -1.60092 2.75871"/>
+    <parent link="camera_fl"/>
+    <child link="lidar_tc_velodyne"/>
+  </joint>
+  <joint name="lidar_tl_velodyne_joint" type="fixed">
+    <origin xyz="-0.286995 -0.384832 -1.36401" rpy="-1.60913 0.0316555 2.71914"/>
+    <parent link="camera_fl"/>
+    <child link="lidar_tl_velodyne"/>
+  </joint>
+  <joint name="lidar_tr_velodyne_joint" type="fixed">
+    <origin xyz="0.927939 -0.314084 -1.37184" rpy="1.59675 0.0289464 0.480934"/>
+    <parent link="camera_fl"/>
+    <child link="lidar_tr_velodyne"/>
+  </joint>
+  <joint name="novatel_imu_joint" type="fixed">
+    <origin xyz="0.238184 0.759911 -2.02008" rpy="1.57341 0.0110054 0.0514961"/>
+    <parent link="camera_fl"/>
+    <child link="novatel_imu"/>
+  </joint>
+</robot>

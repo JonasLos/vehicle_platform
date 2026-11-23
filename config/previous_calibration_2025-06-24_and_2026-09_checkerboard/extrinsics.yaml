@@ -1,0 +1,57 @@
+# blue
+# Calibration Anywhere by Main Street Autonomy
+# log: TAMU.Jeep_GC.Blue_Jeep.2025-06-24.14-27-11.01
+# 
+# Position xyz; Quaternions xyzw
+# [ x_m, y_m, z_m, qx, qy, qz, qw]
+camera_fl:
+  parent: "lidar_tc"
+  child: "camera_fl"
+  value: [1.760872, 0.289978, -0.956039, -0.523534, 0.480752, -0.502847, 0.491868]
+camera_fr:
+  parent: "lidar_tc"
+  child: "camera_fr"
+  value: [1.362035, -0.421431, -0.966925, -0.488771, 0.510286, -0.495702, 0.504966]
+camera_rc:
+  parent: "lidar_tc"
+  child: "camera_rc"
+  value: [-0.885128, -0.164748, -0.477829, -0.539394, -0.571198, 0.405658, 0.467150]
+camera_tl:
+  parent: "lidar_tc"
+  child: "camera_tl"
+  value: [0.913974, 0.630813, -0.471036, -0.775598, 0.046240, 0.578829, 0.247522]
+camera_tr:
+  parent: "lidar_tc"
+  child: "camera_tr"
+  value: [0.947270, -0.619248, -0.486285, 0.106558, -0.730716, 0.230840, 0.633572]
+gps_imu:
+  parent: "lidar_tc"
+  child: "gps_imu"
+  value: [-0.888347, 0.204520, -1.391217, -0.000232, 0.003578, 0.005464, 0.999979]
+imu:
+  parent: "lidar_tc"
+  child: "imu"
+  value: [-0.575018, -0.017369, -1.278259, -0.002768, 0.002436, -0.701559, 0.712602]
+lidar_tl:
+  parent: "lidar_tc"
+  child: "lidar_tl"
+  value: [-0.013496, 0.632575, -0.465394, -0.175096, 0.157452, 0.710888, 0.662713]
+lidar_tr:
+  parent: "lidar_tc"
+  child: "lidar_tr"
+  value: [0.004265, -0.584953, -0.468666, 0.150465, 0.149297, -0.694559, 0.687501]
+# NOT A BLUE JEEP CALIBRATION. The 2025-06-24 Blue Jeep MSA run has no radar entry; this value is
+# copied verbatim from white_jeep_specific/extrinsics.yaml (White Jeep, 2025-04-16). Kept so the
+# TF tree stays connected until the Blue Jeep radar is calibrated. The 2026-09-24 drive measured
+# the direction of travel at -0.24 deg in this radar's frame (self_cal_tool estimator 4) and at
+# +0.60 deg in lidar_tc's (estimator 2), which implies a lidar_tc -> radar yaw of about +0.84 deg,
+# not the -5.443 below -- that number is the White Jeep's own lidar_tc mount yaw showing through.
+# Not substituted here: the radar's x/y/z are also the White Jeep's and remain unmeasured.
+delphi_esr_radar:
+  parent: "lidar_tc"
+  child: "delphi_esr_radar"
+  value: [2.915, -0.65, -1.974, 0.0, 0.0, -0.047482, 0.998872]
+base_link:
+  parent: "lidar_tc"
+  child: "base_link"
+  value: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]

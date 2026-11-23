@@ -1,23 +1,82 @@
+# Front cameras (camera_fl / camera_fr) - AVT Mako G-319, 15 Hz free-run.
+#
+# The '/**' wildcard applies this file to both camera nodes.
+#
+# Every one of these keys is a live ROS parameter on the running node and can be retuned without
+# a restart, e.g.:
+#     ros2 param set /camera_fl feature/ExposureAutoTarget 35
+#     ros2 param get /camera_fl feature/ExposureTimeAbs
+#     ros2 param list /camera_fl | grep feature/
+# Parameter names are the GenICam feature names verbatim; see the AVT Features Reference.
+#
+# Auto vs. manual: while feature/ExposureAuto, feature/GainAuto or feature/BalanceWhiteAuto are
+# 'Continuous', the camera's own algorithm keeps overwriting the corresponding manual value
+# (ExposureTimeAbs / Gain / BalanceRatioAbs). Set the Auto feature to 'Off' first, then the
+# manual value. The values pinned here are the manual fallbacks used once Auto is switched off.
+#
+# This file pins the full photometric + acquisition set on purpose: anything left unpinned comes
+# from whatever is persisted in the camera's UserSet, which is not reproducible across power
+# cycles. Geometry/format (Width, Height, PixelFormat, Binning, packet size) is deliberately not
+# pinned here - those require an acquisition restart and are left to the camera's UserSet.
 /**:
   ros__parameters:
-    feature/AcquisitionFrameRateAbs: 10.0
+    # --- Acquisition -------------------------------------------------------------------------
+    feature/AcquisitionMode: Continuous
+    feature/AcquisitionFrameCount: 1
+    feature/AcquisitionFrameRateAbs: 15.0
     feature/StreamFrameRateConstrain: true
+
+    # --- Trigger (free-run; trigger settings pinned for determinism) --------------------------
+    feature/TriggerSelector: FrameStart
     feature/TriggerMode: 'Off'
-    feature/BalanceWhiteAuto: 'Continuous'
+    feature/TriggerSource: Freerun
+    feature/TriggerActivation: RisingEdge
+    feature/TriggerDelayAbs: 0.0
+
+    # --- Exposure ----------------------------------------------------------------------------
+    feature/ExposureMode: Timed
     feature/ExposureAuto: 'Continuous'
     feature/ExposureAutoAlg: Mean
+    feature/ExposureAutoTarget: 50
+    feature/ExposureAutoMin: 50
+    feature/ExposureAutoMax: 30000
     feature/ExposureAutoAdjustTol: 5
     feature/ExposureAutoRate: 100
-    feature/ExposureAutoTarget: 60
-    feature/ExposureAutoMin: 500
-    feature/ExposureAutoMax: 20000
-    feature/ExposureMode: Timed
+    feature/ExposureAutoOutliers: 0
+    # Manual fallback, effective once feature/ExposureAuto is 'Off' (microseconds).
+    feature/ExposureTimeAbs: 15000.0
+
+    # --- Gain --------------------------------------------------------------------------------
+    feature/GainSelector: All
     feature/GainAuto: 'Continuous'
-    feature/GainAutoAdjustTol: 5
-    feature/GainAutoRate: 100
     feature/GainAutoTarget: 50
     feature/GainAutoMin: 0.0
     feature/GainAutoMax: 12.0
+    feature/GainAutoAdjustTol: 5
+    feature/GainAutoRate: 100
+    feature/GainAutoOutliers: 0
+    # Manual fallback, effective once feature/GainAuto is 'Off' (dB).
+    feature/Gain: 0.0
+
+    # --- White balance -----------------------------------------------------------------------
+    feature/BalanceWhiteAuto: 'Continuous'
+    feature/BalanceWhiteAutoAdjustTol: 5
+    feature/BalanceWhiteAutoRate: 100
+    # Manual white balance is a selector-indexed pair: set BalanceRatioSelector (Red/Blue) first,
+    # then BalanceRatioAbs. YAML can only express one channel, so tune the other at runtime:
+    #     ros2 param set /camera_fl feature/BalanceWhiteAuto Off
+    #     ros2 param set /camera_fl feature/BalanceRatioSelector Blue
+    #     ros2 param set /camera_fl feature/BalanceRatioAbs 2.1
+
+    # --- Tone / colour -----------------------------------------------------------------------
+    feature/BlackLevelSelector: All
+    feature/BlackLevel: 4.0
     feature/Gamma: 1.0
     feature/Hue: 0.0
     feature/Saturation: 1.0
+
+    # --- Auto-exposure metering region (full frame) ------------------------------------------
+    feature/DSPSubregionTop: 0
+    feature/DSPSubregionLeft: 0
+    feature/DSPSubregionBottom: 1544
+    feature/DSPSubregionRight: 2064

@@ -18,7 +18,7 @@ install(
 )
 
 install(
-  PROGRAMS scripts/map_odom_tf_from_gps.py scripts/run_tf_alt_from_map.py
+  PROGRAMS scripts/map_odom_tf_from_gps.py scripts/run_tf_alt_from_map.py scripts/debayer_supervisor.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

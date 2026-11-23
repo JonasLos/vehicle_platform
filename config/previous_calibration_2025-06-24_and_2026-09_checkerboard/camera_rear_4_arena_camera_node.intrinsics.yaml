@@ -1,0 +1,29 @@
+# Checkerboard (ROS camera_calibration) for camera_rear_4, copied verbatim from
+# ~/Desktop/camera_4calibrationdata.tar.gz (2026-09-22, 99 board views).
+# Supersedes the 2025-06-24 MSA intrinsics: aperture/focus were changed after MSA ran.
+image_width: 2048
+image_height: 1536
+camera_name: camera_rear_4
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [1776.05899,    0.     , 1053.98498,
+            0.     , 1773.30898,  758.67863,
+            0.     ,    0.     ,    1.     ]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.194300, 0.098807, -0.001668, 0.001080, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1., 0., 0.,
+         0., 1., 0.,
+         0., 0., 1.]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [1669.91357,    0.     , 1059.02909,    0.     ,
+            0.     , 1709.55725,  755.63078,    0.     ,
+            0.     ,    0.     ,    1.     ,    0.     ]

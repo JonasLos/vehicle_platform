@@ -1,0 +1,46 @@
+# nominal
+# Calibration Anywhere by Main Street Autonomy
+# log: TAMU.Jeep_GC.Blue_Jeep.2026-10-28.16-25-44.01
+# 
+# Position xyz; Quaternions xyzw
+# [ x_m, y_m, z_m, qx, qy, qz, qw]
+camera_fr:
+  parent: "camera_fl"
+  child: "camera_fr"
+  value: [0.660471, 0.049604, -0.021966, 0.006396, 0.027732, 0.043999, 0.998626]
+camera_rear_1:
+  parent: "camera_fl"
+  child: "camera_rear_1"
+  value: [-0.269152, -0.372202, -0.417610, -0.510102, -0.743465, -0.059610, 0.428373]
+camera_rear_2:
+  parent: "camera_fl"
+  child: "camera_rear_2"
+  value: [0.394435, -0.358691, -2.291354, 0.034411, -0.980297, -0.174991, 0.084924]
+camera_rear_3:
+  parent: "camera_fl"
+  child: "camera_rear_3"
+  value: [0.976444, -0.315860, -0.437767, 0.536154, -0.789828, 0.000306, -0.297841]
+camera_rear_4:
+  parent: "camera_fl"
+  child: "camera_rear_4"
+  value: [-0.349242, -0.340549, -1.952080, 0.073197, -0.232245, -0.546932, 0.800980]
+camera_rear_5:
+  parent: "camera_fl"
+  child: "camera_rear_5"
+  value: [1.008452, -0.253862, -1.957448, 0.024927, 0.260586, 0.589117, 0.764470]
+lidar_tc_velodyne:
+  parent: "camera_fl"
+  child: "lidar_tc_velodyne"
+  value: [0.368658, -0.804755, -1.375912, 0.522801, -0.482731, 0.502994, 0.490557]
+lidar_tl_velodyne:
+  parent: "camera_fl"
+  child: "lidar_tl_velodyne"
+  value: [-0.286995, -0.384832, -1.364007, -0.161778, -0.702125, 0.680319, 0.134215]
+lidar_tr_velodyne:
+  parent: "camera_fl"
+  child: "lidar_tr_velodyne"
+  value: [0.927939, -0.314084, -1.371838, 0.693135, 0.180364, 0.156118, 0.680191]
+novatel_imu:
+  parent: "camera_fl"
+  child: "novatel_imu"
+  value: [0.238184, 0.759911, -2.020081, 0.707684, 0.022113, 0.014286, 0.706038]

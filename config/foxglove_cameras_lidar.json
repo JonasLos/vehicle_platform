@@ -1,0 +1,749 @@
+{
+  "configById": {
+    "Image!camera_fl": {
+      "imageMode": {
+        "imageTopic": "/camera_fl/image_color",
+        "calibrationTopic": "/camera_fl/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_fr": {
+      "imageMode": {
+        "imageTopic": "/camera_fr/image_color",
+        "calibrationTopic": "/camera_fr/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_rear_1": {
+      "imageMode": {
+        "imageTopic": "/camera_rear_1/image_color",
+        "calibrationTopic": "/camera_rear_1/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_rear_2": {
+      "imageMode": {
+        "imageTopic": "/camera_rear_2/image_color",
+        "calibrationTopic": "/camera_rear_2/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_rear_3": {
+      "imageMode": {
+        "imageTopic": "/camera_rear_3/image_color",
+        "calibrationTopic": "/camera_rear_3/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_rear_4": {
+      "imageMode": {
+        "imageTopic": "/camera_rear_4/image_color",
+        "calibrationTopic": "/camera_rear_4/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "Image!camera_rear_5": {
+      "imageMode": {
+        "imageTopic": "/camera_rear_5/image_color",
+        "calibrationTopic": "/camera_rear_5/camera_info",
+        "rotation": 0,
+        "flipHorizontal": false,
+        "flipVertical": false
+      },
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 1.5,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      }
+    },
+    "3D!lidar": {
+      "cameraState": {
+        "distance": 45,
+        "perspective": true,
+        "phi": 55,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": -90,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "followTf": "lidar_tc",
+      "scene": {
+        "enableStats": false,
+        "backgroundColor": "#111111"
+      },
+      "transforms": {
+        "showLabel": false,
+        "axisScale": 0.6
+      },
+      "topics": {
+        "/lidar_tc/velodyne_points": {
+          "visible": true,
+          "pointSize": 2,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tl/velodyne_points": {
+          "visible": true,
+          "pointSize": 2,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        },
+        "/lidar_tr/velodyne_points": {
+          "visible": true,
+          "pointSize": 2,
+          "pointShape": "circle",
+          "decayTime": 0,
+          "colorMode": "colormap",
+          "colorMap": "turbo",
+          "colorField": "intensity",
+          "explicitAlpha": 1,
+          "minValue": 0,
+          "maxValue": 100
+        }
+      },
+      "layers": {
+        "grid": {
+          "layerId": "foxglove.Grid",
+          "instanceId": "grid",
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "size": 60,
+          "divisions": 12,
+          "lineWidth": 1,
+          "color": "#248eff40",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "order": 1
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "column",
+    "first": {
+      "direction": "row",
+      "first": "Image!camera_fl",
+      "second": {
+        "direction": "row",
+        "first": "Image!camera_fr",
+        "second": "3D!lidar",
+        "splitPercentage": 65
+      },
+      "splitPercentage": 40
+    },
+    "second": {
+      "direction": "row",
+      "first": "Image!camera_rear_1",
+      "second": {
+        "direction": "row",
+        "first": "Image!camera_rear_2",
+        "second": {
+          "direction": "row",
+          "first": "Image!camera_rear_3",
+          "second": {
+            "direction": "row",
+            "first": "Image!camera_rear_4",
+            "second": "Image!camera_rear_5",
+            "splitPercentage": 50.0
+          },
+          "splitPercentage": 33.333333333333336
+        },
+        "splitPercentage": 25.0
+      },
+      "splitPercentage": 20.0
+    },
+    "splitPercentage": 58
+  }
+}

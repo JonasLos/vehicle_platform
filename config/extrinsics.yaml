@@ -1,41 +1,70 @@
-# tamu0
+# blue
 # Calibration Anywhere by Main Street Autonomy
-# log: TAMU.Jeep_GC.White_Jeep.2025-04-16.17-20-11.01
-# 
+# log: TAMU.Jeep_GC.Blue_Jeep.2026-10-28.16-25-44.01
+#
 # Position xyz; Quaternions xyzw
 # [ x_m, y_m, z_m, qx, qy, qz, qw]
+#
+# Re-rooted from the MSA delivery (msa_2026-10-28/extrinsics.yaml, which is rooted at camera_fl)
+# so lidar_tc stays the TF root, and renamed to the frame_ids the drivers actually publish:
+#   lidar_tc_velodyne -> lidar_tc (root), lidar_tl_velodyne -> lidar_tl,
+#   lidar_tr_velodyne -> lidar_tr, novatel_imu -> imu_link (novatel_oem7 imu/data[_raw] frame).
+# Sanity check vs the 2025-06-24 run: lidar_tl/lidar_tr agree to ~1 cm / 0.1 deg.
+# The rear cameras are now calibrated under their own frame names (camera_rear_1..5), so the
+# old camera_rc/tl/tr aliases are gone (rear_1 ~ old tl, rear_2 ~ old rc, rear_3 ~ old tr).
 camera_fl:
   parent: "lidar_tc"
   child: "camera_fl"
-  value: [1.208815, 0.273073, -0.842512, -0.491530, 0.531214, -0.511528, 0.463194]
-camera_rc_arena_camera_node:
+  value: [1.355936, 0.363210, -0.840351, -0.522801, 0.482731, -0.502994, 0.490557]
+camera_fr:
   parent: "lidar_tc"
-  child: "camera_rc_arena_camera_node"
-  value: [-0.868880, -0.067574, -0.393253, -0.569404, -0.500364, 0.481671, 0.439781]
-camera_tl_arena_camera_node:
+  child: "camera_fr"
+  value: [1.351872, -0.299309, -0.855049, -0.483757, 0.515458, -0.498305, 0.501971]
+camera_rear_1:
   parent: "lidar_tc"
-  child: "camera_tl_arena_camera_node"
-  value: [0.884644, 0.503658, -0.445198, -0.617370, -0.457440, 0.315877, 0.556620]
-camera_tr_arena_camera_node:
+  child: "camera_rear_1"
+  value: [0.935184, 0.640081, -0.477466, -0.876922, 0.067491, 0.390215, 0.272370]
+camera_rear_2:
   parent: "lidar_tc"
-  child: "camera_tr_arena_camera_node"
-  value: [0.779199, -0.690587, -0.436135, -0.437743, -0.591724, 0.551067, 0.393152]
-gps_imu:
+  child: "camera_rear_2"
+  value: [-0.919325, -0.074213, -0.432441, -0.605075, -0.548690, 0.367330, 0.444851]
+camera_rear_3:
   parent: "lidar_tc"
-  child: "gps_imu"
-  value: [-0.625577, 0.288784, -0.842490, 0.002484, -0.000185, -0.033067, 0.999450]
-imu:
+  child: "camera_rear_3"
+  value: [0.949198, -0.606839, -0.468304, 0.021595, -0.800756, 0.304067, 0.515623]
+camera_rear_4:
   parent: "lidar_tc"
-  child: "imu"
-  value: [-0.658274, 0.159162, -0.687196, 0.002018, 0.001691, -0.742414, 0.669936]
+  child: "camera_rear_4"
+  value: [-0.601183, 0.676464, -0.493774, -0.763685, -0.050026, -0.585106, 0.268202]
+camera_rear_5:
+  parent: "lidar_tc"
+  child: "camera_rear_5"
+  value: [-0.569597, -0.683551, -0.509236, 0.028021, 0.792319, -0.243796, 0.558578]
 lidar_tl:
   parent: "lidar_tc"
   child: "lidar_tl"
-  value: [0.094656, 0.595837, -0.443078, -0.237755, 0.240213, 0.610386, 0.716379]
+  value: [-0.011140, 0.632716, -0.453767, -0.174283, 0.157402, 0.711393, 0.662397]
 lidar_tr:
   parent: "lidar_tc"
   child: "lidar_tr"
-  value: [-0.045790, -0.591771, -0.420407, 0.158471, 0.138444, -0.720141, 0.661148]
+  value: [0.014176, -0.584018, -0.460751, 0.150503, 0.149804, -0.694440, 0.687504]
+imu_link:
+  parent: "lidar_tc"
+  child: "imu_link"
+  value: [-0.665124, 0.030277, -1.561041, -0.003939, 0.003182, -0.701307, 0.712841]
+# NOT PART OF THE 2026-10-28 RUN. Carried over unchanged from the 2025-06-24 Blue Jeep calibration
+# (no equivalent in the new MSA delivery); nothing in vehicle_platform consumes this frame.
+gps_imu:
+  parent: "lidar_tc"
+  child: "gps_imu"
+  value: [-0.888347, 0.204520, -1.391217, -0.000232, 0.003578, 0.005464, 0.999979]
+# NOT A BLUE JEEP CALIBRATION. The 2025-06-24 Blue Jeep MSA run has no radar entry; this value is
+# copied verbatim from white_jeep_specific/extrinsics.yaml (White Jeep, 2025-04-16). Kept so the
+# TF tree stays connected until the Blue Jeep radar is calibrated. The 2026-09-24 drive measured
+# the direction of travel at -0.24 deg in this radar's frame (self_cal_tool estimator 4) and at
+# +0.60 deg in lidar_tc's (estimator 2), which implies a lidar_tc -> radar yaw of about +0.84 deg,
+# not the -5.443 below -- that number is the White Jeep's own lidar_tc mount yaw showing through.
+# Not substituted here: the radar's x/y/z are also the White Jeep's and remain unmeasured.
 delphi_esr_radar:
   parent: "lidar_tc"
   child: "delphi_esr_radar"

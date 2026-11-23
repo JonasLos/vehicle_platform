@@ -10,5 +10,8 @@ velodyne_driver_node:
         frame_id: velodyne
         model: VLP16
         rpm: 600.0
-        port: 2369
+        # Split scans on azimuth (straight behind) so each cloud is exactly one revolution,
+        # matching lidar_tc.
+        cut_angle: 3.14159
+        port: 2370
         timestamp_first_packet: false

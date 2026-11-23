@@ -8,7 +8,11 @@ velodyne_driver_node:
         read_fast: false
         repeat_delay: 0.0
         frame_id: velodyne
-        model: 32C
+        model: VLS128
         rpm: 600.0
-        port: 2370
+        # Split scans on azimuth instead of a fixed packet count. The driver's built-in
+        # VLS128 packet rate (626 pkts/scan) overshoots what this sensor sends, which
+        # made each cloud ~1.1 revolutions and dropped the rate to ~9.1 Hz.
+        cut_angle: 3.14159
+        port: 2368
         timestamp_first_packet: false

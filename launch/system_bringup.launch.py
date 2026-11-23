@@ -114,6 +114,7 @@ def _front_camera_fr_action(context):
                 "name": "camera_fr",
                 "frame_id": "camera_fr",
                 "ip": LaunchConfiguration("front_camera_fr_ip").perform(context),
+                "camera_info_url": LaunchConfiguration("front_camera_fr_info_url").perform(context),
                 "params_file": LaunchConfiguration("front_camera_params_file").perform(context),
                 "use_measurement_time": "false",
                 "image_proc": "false",
@@ -122,8 +123,43 @@ def _front_camera_fr_action(context):
     ]
 
 
+def _is_true(context, name):
+    return LaunchConfiguration(name).perform(context).lower() in ["true", "1", "yes", "on"]
+
+
+def _debayer_supervisor_action(context):
+    logger = get_logger("vehicle_platform_bringup")
+    if not _is_true(context, "use_debayer_supervisor"):
+        return []
+    if not _package_available("image_proc"):
+        logger.warning("Skipping debayer supervisor: package 'image_proc' is not available")
+        return []
+
+    cameras = []
+    if _is_true(context, "enable_front_image_proc"):
+        cameras += [c for c in ["camera_fl", "camera_fr"] if _is_true(context, "enable_%s" % c)]
+    if _is_true(context, "enable_rear_image_proc"):
+        cameras += [
+            "camera_rear_%d" % i for i in range(1, 6) if _is_true(context, "enable_camera_rear_%d" % i)
+        ]
+    if not cameras:
+        return []
+
+    return [
+        Node(
+            package="vehicle_platform",
+            executable="debayer_supervisor.py",
+            name="debayer_supervisor",
+            output="screen",
+            arguments=cameras,
+        )
+    ]
+
+
 def _front_image_proc_fl_action(context):
     logger = get_logger("vehicle_platform_bringup")
+    if _is_true(context, "use_debayer_supervisor"):
+        return []
     if not _package_available("image_proc"):
         logger.warning("Skipping front camera_fl image_proc: package 'image_proc' is not available")
         return []
@@ -145,6 +181,8 @@ def _front_image_proc_fl_action(context):
             namespace="camera_fl",
             name="image_proc",
             output="screen",
+            # 0 = bilinear; the default (3 = VNG) cannot keep up at 15 Hz on 3 MP frames
+            parameters=[{"debayer": 0}],
             remappings=[("image_raw", "image")],
         )
     ]
@@ -152,6 +190,8 @@ def _front_image_proc_fl_action(context):
 
 def _front_image_proc_fr_action(context):
     logger = get_logger("vehicle_platform_bringup")
+    if _is_true(context, "use_debayer_supervisor"):
+        return []
     if not _package_available("image_proc"):
         logger.warning("Skipping front camera_fr image_proc: package 'image_proc' is not available")
         return []
@@ -173,75 +213,42 @@ def _front_image_proc_fr_action(context):
             namespace="camera_fr",
             name="image_proc",
             output="screen",
+            # 0 = bilinear; the default (3 = VNG) cannot keep up at 15 Hz on 3 MP frames
+            parameters=[{"debayer": 0}],
             remappings=[("image_raw", "image")],
         )
     ]
 
 
-def _rear_image_proc_1_action(context):
+def _rear_image_proc_action(context, index):
     logger = get_logger("vehicle_platform_bringup")
+    if _is_true(context, "use_debayer_supervisor"):
+        return []
     if not _package_available("image_proc"):
-        logger.warning("Skipping rear camera_1 image_proc: package 'image_proc' is not available")
+        logger.warning(
+            "Skipping rear camera_%d image_proc: package 'image_proc' is not available" % index
+        )
         return []
 
-    enable_camera = LaunchConfiguration("enable_camera_rear_1").perform(context).lower()
+    enabled = LaunchConfiguration("enable_camera_rear_%d" % index).perform(context).lower()
     enable_rear_image_proc = LaunchConfiguration("enable_rear_image_proc").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"] or enable_rear_image_proc not in ["true", "1", "yes", "on"]:
+    if enabled not in ["true", "1", "yes", "on"] or enable_rear_image_proc not in [
+        "true",
+        "1",
+        "yes",
+        "on",
+    ]:
         return []
 
     return [
         Node(
             package="image_proc",
             executable="debayer_node",
-            namespace="camera_rear_1",
+            namespace="camera_rear_%d" % index,
             name="image_proc",
             output="screen",
-            remappings=[("image_raw", "image")],
-        )
-    ]
-
-
-def _rear_image_proc_2_action(context):
-    logger = get_logger("vehicle_platform_bringup")
-    if not _package_available("image_proc"):
-        logger.warning("Skipping rear camera_2 image_proc: package 'image_proc' is not available")
-        return []
-
-    enable_camera = LaunchConfiguration("enable_camera_rear_2").perform(context).lower()
-    enable_rear_image_proc = LaunchConfiguration("enable_rear_image_proc").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"] or enable_rear_image_proc not in ["true", "1", "yes", "on"]:
-        return []
-
-    return [
-        Node(
-            package="image_proc",
-            executable="debayer_node",
-            namespace="camera_rear_2",
-            name="image_proc",
-            output="screen",
-            remappings=[("image_raw", "image")],
-        )
-    ]
-
-
-def _rear_image_proc_3_action(context):
-    logger = get_logger("vehicle_platform_bringup")
-    if not _package_available("image_proc"):
-        logger.warning("Skipping rear camera_3 image_proc: package 'image_proc' is not available")
-        return []
-
-    enable_camera = LaunchConfiguration("enable_camera_rear_3").perform(context).lower()
-    enable_rear_image_proc = LaunchConfiguration("enable_rear_image_proc").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"] or enable_rear_image_proc not in ["true", "1", "yes", "on"]:
-        return []
-
-    return [
-        Node(
-            package="image_proc",
-            executable="debayer_node",
-            namespace="camera_rear_3",
-            name="image_proc",
-            output="screen",
+            # 0 = bilinear; the default (3 = VNG) cannot keep up at 15 Hz on 3 MP frames
+            parameters=[{"debayer": 0}],
             remappings=[("image_raw", "image")],
         )
     ]
@@ -276,113 +283,95 @@ def _package_available(package_name):
         return False
 
 
-def _rear_camera_1_action(context):
+def _resolve_camera_info_url(context, index):
+    """Work out a rear camera's calibration URL.
+
+    Accepts a full URL (file:// or package://), a bare filename or path
+    relative to this package's config dir, or an absolute path. When left
+    empty, falls back to the intrinsics file named after the camera's
+    frame_id, so setting the TF frame is enough to pick up the matching
+    calibration and the two can never disagree.
+    """
     logger = get_logger("vehicle_platform_bringup")
-    if not _package_available("arena_camera_node"):
-        logger.warning("Skipping rear camera_1: package 'arena_camera_node' is not available")
-        return []
-    
-    enable_camera = LaunchConfiguration("enable_camera_rear_1").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"]:
-        return []
-    
-    return [
-        Node(
-            package="arena_camera_node",
-            executable="start",
-            namespace="camera_rear_1",
-            name="arena_camera_node",
-            output="log",
-            arguments=["--ros-args", "--log-level", "warn"],
-            parameters=[
-                {
-                    "topic": "/camera_rear_1/image",
-                    "ip": LaunchConfiguration("rear_camera_1_ip"),
-                    "host_iface_ip": LaunchConfiguration("rear_camera_1_host_iface_ip"),
-                    "discovery_timeout_ms": LaunchConfiguration("camera_discovery_timeout_ms"),
-                    "frame_rate": LaunchConfiguration("rear_camera_frame_rate_hz"),
-                    "auto_exposure": LaunchConfiguration("rear_auto_exposure"),
-                    "auto_exposure_min_us": LaunchConfiguration("rear_auto_exposure_min_us"),
-                    "auto_exposure_max_us": LaunchConfiguration("rear_auto_exposure_max_us"),
-                    "auto_exposure_target": LaunchConfiguration("rear_auto_exposure_target"),
-                    "trigger_mode": LaunchConfiguration("rear_trigger_mode"),
-                    "trigger_source": LaunchConfiguration("rear_trigger_source"),
-                    "trigger_selector": LaunchConfiguration("rear_trigger_selector"),
-                    "trigger_activation": LaunchConfiguration("rear_trigger_activation"),
-                }
-            ],
+    config_dir = os.path.join(get_package_share_directory("vehicle_platform"), "config")
+
+    url = LaunchConfiguration("rear_camera_%d_info_url" % index).perform(context).strip()
+
+    if not url:
+        frame_id = LaunchConfiguration("rear_camera_%d_frame_id" % index).perform(context).strip()
+        candidate = os.path.join(config_dir, "%s_arena_camera_node.intrinsics.yaml" % frame_id)
+        if frame_id and os.path.isfile(candidate):
+            logger.info(
+                "rear camera %d: using intrinsics %s (matched on frame_id '%s')"
+                % (index, candidate, frame_id)
+            )
+            return "file://" + candidate
+        logger.warning(
+            "rear camera %d: no calibration. Set rear_camera_%d_info_url, or set "
+            "rear_camera_%d_frame_id to a frame with an intrinsics file in %s. "
+            "CameraInfo will be published uncalibrated and rectification is unavailable."
+            % (index, index, index, config_dir)
         )
-    ]
+        return ""
 
+    if "://" in url:
+        return url
 
-def _rear_camera_2_action(context):
-    logger = get_logger("vehicle_platform_bringup")
-    if not _package_available("arena_camera_node"):
-        logger.warning("Skipping rear camera_2: package 'arena_camera_node' is not available")
-        return []
-    
-    enable_camera = LaunchConfiguration("enable_camera_rear_2").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"]:
-        return []
-    
-    return [
-        Node(
-            package="arena_camera_node",
-            executable="start",
-            namespace="camera_rear_2",
-            name="arena_camera_node",
-            output="log",
-            arguments=["--ros-args", "--log-level", "warn"],
-            parameters=[
-                {
-                    "topic": "/camera_rear_2/image",
-                    "ip": LaunchConfiguration("rear_camera_2_ip"),
-                    "host_iface_ip": LaunchConfiguration("rear_camera_2_host_iface_ip"),
-                    "discovery_timeout_ms": LaunchConfiguration("camera_discovery_timeout_ms"),
-                    "frame_rate": LaunchConfiguration("rear_camera_frame_rate_hz"),
-                    "auto_exposure": LaunchConfiguration("rear_auto_exposure"),
-                    "auto_exposure_min_us": LaunchConfiguration("rear_auto_exposure_min_us"),
-                    "auto_exposure_max_us": LaunchConfiguration("rear_auto_exposure_max_us"),
-                    "auto_exposure_target": LaunchConfiguration("rear_auto_exposure_target"),
-                    "trigger_mode": LaunchConfiguration("rear_trigger_mode"),
-                    "trigger_source": LaunchConfiguration("rear_trigger_source"),
-                    "trigger_selector": LaunchConfiguration("rear_trigger_selector"),
-                    "trigger_activation": LaunchConfiguration("rear_trigger_activation"),
-                }
-            ],
+    path = url if os.path.isabs(url) else os.path.join(config_dir, url)
+    if not os.path.isfile(path):
+        logger.warning(
+            "rear camera %d: calibration file not found: %s" % (index, path)
         )
-    ]
+    return "file://" + path
 
 
-def _rear_camera_3_action(context):
+def _rear_camera_action(context, index):
     logger = get_logger("vehicle_platform_bringup")
     if not _package_available("arena_camera_node"):
-        logger.warning("Skipping rear camera_3: package 'arena_camera_node' is not available")
+        logger.warning(
+            "Skipping rear camera_%d: package 'arena_camera_node' is not available" % index
+        )
         return []
-    
-    enable_camera = LaunchConfiguration("enable_camera_rear_3").perform(context).lower()
-    if enable_camera not in ["true", "1", "yes", "on"]:
+
+    enabled = LaunchConfiguration("enable_camera_rear_%d" % index).perform(context).lower()
+    if enabled not in ["true", "1", "yes", "on"]:
         return []
-    
+
+    camera_name = "camera_rear_%d" % index
     return [
         Node(
             package="arena_camera_node",
             executable="start",
-            namespace="camera_rear_3",
+            namespace=camera_name,
             name="arena_camera_node",
             output="log",
             arguments=["--ros-args", "--log-level", "warn"],
             parameters=[
                 {
-                    "topic": "/camera_rear_3/image",
-                    "ip": LaunchConfiguration("rear_camera_3_ip"),
-                    "host_iface_ip": LaunchConfiguration("rear_camera_3_host_iface_ip"),
+                    "topic": "/%s/image" % camera_name,
+                    "ip": LaunchConfiguration("rear_camera_%d_ip" % index),
+                    "host_iface_ip": LaunchConfiguration("rear_camera_%d_host_iface_ip" % index),
                     "discovery_timeout_ms": LaunchConfiguration("camera_discovery_timeout_ms"),
                     "frame_rate": LaunchConfiguration("rear_camera_frame_rate_hz"),
                     "auto_exposure": LaunchConfiguration("rear_auto_exposure"),
                     "auto_exposure_min_us": LaunchConfiguration("rear_auto_exposure_min_us"),
                     "auto_exposure_max_us": LaunchConfiguration("rear_auto_exposure_max_us"),
                     "auto_exposure_target": LaunchConfiguration("rear_auto_exposure_target"),
+                    "auto_gain": LaunchConfiguration("rear_auto_gain"),
+                    "auto_gain_min": LaunchConfiguration("rear_auto_gain_min"),
+                    "auto_gain_max": LaunchConfiguration("rear_auto_gain_max"),
+                    "frame_id": LaunchConfiguration("rear_camera_%d_frame_id" % index),
+                    "camera_info_url": _resolve_camera_info_url(context, index),
+                    "use_ros_time": LaunchConfiguration("rear_camera_use_ros_time"),
+                    "ptp_enable": LaunchConfiguration("rear_camera_ptp_enable"),
+                    "packet_size": LaunchConfiguration("rear_camera_packet_size"),
+                    "packet_delay": LaunchConfiguration("rear_camera_packet_delay"),
+                    "stream_buffer_handling_mode": LaunchConfiguration(
+                        "rear_camera_stream_buffer_handling_mode"
+                    ),
+                    "device_link_throughput_limit": LaunchConfiguration(
+                        "rear_camera_link_throughput_limit"
+                    ),
                     "trigger_mode": LaunchConfiguration("rear_trigger_mode"),
                     "trigger_source": LaunchConfiguration("rear_trigger_source"),
                     "trigger_selector": LaunchConfiguration("rear_trigger_selector"),
@@ -403,15 +392,7 @@ def generate_launch_description():
     dbw_share = get_package_share_directory("raptor_dbw_can")
     rviz_default_config = os.path.join(vehicle_platform_share, "sample_file.rviz")
     camera_fl_info_default = "file://" + os.path.join(config_dir, "camera_fl.intrinsics.yaml")
-    rear_camera_rc_info_default = "file://" + os.path.join(
-        config_dir, "camera_rc_arena_camera_node.intrinsics.yaml"
-    )
-    rear_camera_tl_info_default = "file://" + os.path.join(
-        config_dir, "camera_tl_arena_camera_node.intrinsics.yaml"
-    )
-    rear_camera_tr_info_default = "file://" + os.path.join(
-        config_dir, "camera_tr_arena_camera_node.intrinsics.yaml"
-    )
+    camera_fr_info_default = "file://" + os.path.join(config_dir, "camera_fr.intrinsics.yaml")
     front_camera_params_default = os.path.join(config_dir, "avt_mako_15hz.yaml")
 
     lidar_tl_driver_params = os.path.join(
@@ -426,7 +407,7 @@ def generate_launch_description():
 
     novatel_launch = os.path.join(novatel_share, "launch", "oem7_net.launch.py")
     v2x_launch = os.path.join(v2x_share, "launch", "v2x_ros_driver.launch.py")
-    v2x_override_file = "/home/avalocal/ros_drivers/src/v2x-ros-driver/v2x_ros_driver/GlobalParamsOverride.c2p.yaml"
+    v2x_override_file = os.path.join(v2x_share, "config", "GlobalParamsOverride.yaml")
     dbw_launch = os.path.join(dbw_share, "launch", "raptor_dbw_can_launch.py")
     delphi_launch = os.path.join(delphi_share, "launch", "delphi_esr_bringup.launch.py")
     extrinsics_launch = os.path.join(vehicle_platform_share, "launch", "extrinsics.launch.py")
@@ -454,6 +435,11 @@ def generate_launch_description():
                 description="Calibration file URL for front-left camera (camera_info_url)",
             ),
             DeclareLaunchArgument(
+                "front_camera_fr_info_url",
+                default_value=camera_fr_info_default,
+                description="Calibration file URL for front-right camera (camera_info_url)",
+            ),
+            DeclareLaunchArgument(
                 "front_camera_fr_ip",
                 default_value="192.168.10.10",
                 description="Front-right camera IP for avt_vimba driver",
@@ -464,28 +450,13 @@ def generate_launch_description():
                 description="Front camera AVT parameter file (use this to cap front camera frame rate)",
             ),
             DeclareLaunchArgument(
-                "rear_camera_rc_info_url",
-                default_value=rear_camera_rc_info_default,
-                description="Calibration file URL for rear-center camera",
-            ),
-            DeclareLaunchArgument(
-                "rear_camera_tl_info_url",
-                default_value=rear_camera_tl_info_default,
-                description="Calibration file URL for rear top-left camera",
-            ),
-            DeclareLaunchArgument(
-                "rear_camera_tr_info_url",
-                default_value=rear_camera_tr_info_default,
-                description="Calibration file URL for rear top-right camera",
-            ),
-            DeclareLaunchArgument(
                 "enable_camera_fl",
                 default_value="true",
                 description="Enable the front-left avt_vimba camera",
             ),
             DeclareLaunchArgument(
                 "enable_camera_fr",
-                default_value="false",
+                default_value="true",
                 description="Enable the front-right avt_vimba camera",
             ),
             DeclareLaunchArgument(
@@ -524,6 +495,26 @@ def generate_launch_description():
                 description="Host NIC IP to use for rear camera 3 discovery",
             ),
             DeclareLaunchArgument(
+                "rear_camera_4_ip",
+                default_value="192.168.60.10",
+                description="Rear camera 4 IP for arena camera driver",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_4_host_iface_ip",
+                default_value="192.168.60.100",
+                description="Host NIC IP to use for rear camera 4 discovery",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_5_ip",
+                default_value="192.168.70.10",
+                description="Rear camera 5 IP for arena camera driver",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_5_host_iface_ip",
+                default_value="192.168.70.100",
+                description="Host NIC IP to use for rear camera 5 discovery",
+            ),
+            DeclareLaunchArgument(
                 "rear_camera_frame_rate_hz",
                 default_value="15.0",
                 description="Target rear camera frame rate in Hz",
@@ -535,18 +526,178 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "rear_auto_exposure_min_us",
-                default_value="100.0",
+                default_value="50.0",
                 description="Rear camera minimum exposure limit in microseconds",
             ),
             DeclareLaunchArgument(
                 "rear_auto_exposure_max_us",
-                default_value="60000.0",
+                default_value="30000.0", #"60000.0",
                 description="Rear camera maximum exposure limit in microseconds",
             ),
             DeclareLaunchArgument(
                 "rear_auto_exposure_target",
-                default_value="50.0",
-                description="Rear camera auto exposure target brightness",
+                default_value="95.0",
+                description=(
+                    "Rear camera target brightness (camera TargetBrightness node, integer) 0-255. "
+                    "Shared by the auto exposure and auto gain algorithms."
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_auto_gain",
+                default_value="true",
+                description=(
+                    "Enable rear camera auto gain. Off by default to match the camera's "
+                    "default user set; enabling it brightens dark scenes at the cost of noise"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_auto_gain_min",
+                default_value="-1.0",
+                description="Rear camera minimum auto gain in dB (-1 leaves the camera limit alone)",
+            ),
+            DeclareLaunchArgument(
+                "rear_auto_gain_max",
+                default_value="20.0",
+                description="Rear camera maximum auto gain in dB (-1 leaves the camera limit alone)",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_use_ros_time",
+                default_value="true",
+                description=(
+                    "Stamp rear camera images with ROS time on arrival. The camera clock "
+                    "free-runs from power-on, so with this false and PTP off the stamps "
+                    "land in 1970 and break TF / message_filters sync"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_ptp_enable",
+                default_value="false",
+                description="Enable IEEE-1588 PTP on the rear cameras (needs a grandmaster on the network)",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_1_frame_id",
+                default_value="camera_rear_1",
+                description=(
+                    "TF frame for rear camera 1. extrinsics.yaml and the matching "
+                    "<frame_id>_arena_camera_node.intrinsics.yaml are calibrated for camera_rear_1"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_1_info_url",
+                default_value="",
+                description=(
+                    "Calibration for rear camera 1. Accepts a full file:// or package:// "
+                    "URL, an absolute path, or a bare filename resolved against "
+                    "vehicle_platform/config (e.g. camera_rear_1_arena_camera_node.intrinsics.yaml). "
+                    "If empty, the intrinsics file matching rear_camera_1_frame_id is used "
+                    "when one exists"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_2_frame_id",
+                default_value="camera_rear_2",
+                description=(
+                    "TF frame for rear camera 2. extrinsics.yaml and the matching "
+                    "<frame_id>_arena_camera_node.intrinsics.yaml are calibrated for camera_rear_2"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_2_info_url",
+                default_value="",
+                description=(
+                    "Calibration for rear camera 2. Accepts a full file:// or package:// "
+                    "URL, an absolute path, or a bare filename resolved against "
+                    "vehicle_platform/config (e.g. camera_rear_1_arena_camera_node.intrinsics.yaml). "
+                    "If empty, the intrinsics file matching rear_camera_2_frame_id is used "
+                    "when one exists"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_3_frame_id",
+                default_value="camera_rear_3",
+                description=(
+                    "TF frame for rear camera 3. extrinsics.yaml and the matching "
+                    "<frame_id>_arena_camera_node.intrinsics.yaml are calibrated for camera_rear_3"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_3_info_url",
+                default_value="",
+                description=(
+                    "Calibration for rear camera 3. Accepts a full file:// or package:// "
+                    "URL, an absolute path, or a bare filename resolved against "
+                    "vehicle_platform/config (e.g. camera_rear_1_arena_camera_node.intrinsics.yaml). "
+                    "If empty, the intrinsics file matching rear_camera_3_frame_id is used "
+                    "when one exists"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_4_frame_id",
+                default_value="camera_rear_4",
+                description=(
+                    "TF frame for rear camera 4. extrinsics.yaml and the matching "
+                    "<frame_id>_arena_camera_node.intrinsics.yaml are calibrated for camera_rear_4"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_4_info_url",
+                default_value="",
+                description=(
+                    "Calibration for rear camera 4. Accepts a full file:// or package:// "
+                    "URL, an absolute path, or a bare filename resolved against "
+                    "vehicle_platform/config (e.g. camera_rear_1_arena_camera_node.intrinsics.yaml). "
+                    "If empty, the intrinsics file matching rear_camera_4_frame_id is used "
+                    "when one exists"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_5_frame_id",
+                default_value="camera_rear_5",
+                description=(
+                    "TF frame for rear camera 5. extrinsics.yaml and the matching "
+                    "<frame_id>_arena_camera_node.intrinsics.yaml are calibrated for camera_rear_5"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_5_info_url",
+                default_value="",
+                description=(
+                    "Calibration for rear camera 5. Accepts a full file:// or package:// "
+                    "URL, an absolute path, or a bare filename resolved against "
+                    "vehicle_platform/config (e.g. camera_rear_1_arena_camera_node.intrinsics.yaml). "
+                    "If empty, the intrinsics file matching rear_camera_5_frame_id is used "
+                    "when one exists"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_packet_size",
+                default_value="9000",
+                description=(
+                    "GigE stream packet size (GevSCPSPacketSize) for the rear cameras, in "
+                    "bytes. Requires a matching host NIC MTU on every camera link (all five "
+                    "are at MTU 9000). Measured: 9000 cuts packets/frame from 2247 to 350 and "
+                    "median image latency from ~9.2 ms to ~6.8 ms. Set -1 to let the SDK "
+                    "auto-negotiate, which conservatively picks 1400. Note ICMP is not a valid "
+                    "probe: these cameras cap pings at a 1500 byte MTU yet stream fine at 9000"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_packet_delay",
+                default_value="-1",
+                description="Inter-packet delay (GevSCPD) for the rear cameras. -1 leaves the camera default",
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_stream_buffer_handling_mode",
+                default_value="",
+                description=(
+                    "Rear camera buffer policy: NewestOnly for lowest latency, "
+                    "OldestFirstOverwrite (camera default) to favour continuity"
+                ),
+            ),
+            DeclareLaunchArgument(
+                "rear_camera_link_throughput_limit",
+                default_value="125000000",
+                description="Cap rear camera device output in bytes/s (DeviceLinkThroughputLimit). -1 disables the cap",
             ),
             DeclareLaunchArgument(
                 "rear_trigger_mode",
@@ -584,9 +735,27 @@ def generate_launch_description():
                 description="Enable rear camera 3",
             ),
             DeclareLaunchArgument(
+                "enable_camera_rear_4",
+                default_value="true",
+                description="Enable rear camera 4",
+            ),
+            DeclareLaunchArgument(
+                "enable_camera_rear_5",
+                default_value="true",
+                description="Enable rear camera 5",
+            ),
+            DeclareLaunchArgument(
                 "enable_rear_image_proc",
                 default_value="true",
                 description="Enable image_proc debayer for rear camera image topics",
+            ),
+            DeclareLaunchArgument(
+                "use_debayer_supervisor",
+                default_value="true",
+                description=(
+                    "Run the debayer nodes under debayer_supervisor.py, which restarts any that "
+                    "deadlock in rmw_zenoh (and saves a backtrace). false = plain debayer nodes"
+                ),
             ),
             DeclareLaunchArgument(
                 "enable_rviz",
@@ -705,7 +874,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "delphi_hardware_id",
-                default_value="94492",
+                default_value="10055",
                 description="Kvaser hardware serial for Delphi ESR radar",
             ),
             DeclareLaunchArgument(
@@ -875,7 +1044,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "v2x_rtor_obu_reference_bsm_id",
-                default_value="e153df70",
+                default_value="e153df8e",
                 description="Hex TemporaryID of the OBU loopback BSM (identifies the ego vehicle)",
             ),
             DeclareLaunchArgument(
@@ -885,7 +1054,7 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "v2x_rtor_allow_alerts_without_map_right_turn",
-                default_value="false",
+                default_value="true",
                 description="If true, allow RTOR alerts even when MAP lane maneuver data says right turn is not allowed",
             ),
             DeclareLaunchArgument(
@@ -944,8 +1113,8 @@ def generate_launch_description():
                 namespace="lidar_tc",
                 frame_id="lidar_tc",
                 driver_params_file=lidar_tc_driver_params,
-                transform_cfg_name="VLP32C-velodyne_transform_node-params.yaml",
-                calibration_name="VeloView-VLP-32C.yaml",
+                transform_cfg_name="VLS128-velodyne_transform_node-params.yaml",
+                calibration_name="VLS128.yaml",
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(novatel_launch),
@@ -998,12 +1167,17 @@ def generate_launch_description():
             OpaqueFunction(function=_front_camera_fr_action),
             OpaqueFunction(function=_front_image_proc_fl_action),
             OpaqueFunction(function=_front_image_proc_fr_action),
-            OpaqueFunction(function=_rear_camera_1_action),
-            OpaqueFunction(function=_rear_camera_2_action),
-            OpaqueFunction(function=_rear_camera_3_action),
-            OpaqueFunction(function=_rear_image_proc_1_action),
-            OpaqueFunction(function=_rear_image_proc_2_action),
-            OpaqueFunction(function=_rear_image_proc_3_action),
+            OpaqueFunction(function=lambda ctx, i=1: _rear_camera_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=2: _rear_camera_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=3: _rear_camera_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=4: _rear_camera_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=5: _rear_camera_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=1: _rear_image_proc_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=2: _rear_image_proc_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=3: _rear_image_proc_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=4: _rear_image_proc_action(ctx, i)),
+            OpaqueFunction(function=lambda ctx, i=5: _rear_image_proc_action(ctx, i)),
+            OpaqueFunction(function=_debayer_supervisor_action),
             IncludeLaunchDescription(PythonLaunchDescriptionSource(extrinsics_launch)),
             IncludeLaunchDescription(PythonLaunchDescriptionSource(dbw_launch)),
             IncludeLaunchDescription(

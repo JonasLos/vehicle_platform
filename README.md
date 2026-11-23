@@ -36,10 +36,17 @@ ros2 launch vehicle_platform system_bringup.launch.py
 | `rear_camera_2_ip` | `192.168.40.10` | Rear camera 2 IP |
 | `rear_camera_3_ip` | `192.168.30.10` | Rear camera 3 IP |
 | `rear_auto_exposure` | `true` | Rear camera auto exposure |
-| `rear_auto_exposure_min_us` | `100.0` | Rear auto exposure lower limit (µs) |
-| `rear_auto_exposure_max_us` | `60000.0` | Rear auto exposure upper limit (µs) |
-| `rear_auto_exposure_target` | `50.0` | Rear auto exposure target brightness (0–100) |
+| `rear_auto_exposure_min_us` | `10000.0` | Rear auto exposure lower limit (µs) |
+| `rear_auto_exposure_max_us` | `100000.0` | Rear auto exposure upper limit (µs). Clamped by the camera to ~66.5 ms at 15 Hz |
+| `rear_auto_exposure_target` | `100.0` | Target brightness (camera `TargetBrightness`, integer; camera default 128). Shared by auto exposure and auto gain |
+| `rear_auto_gain` | `false` | Rear camera auto gain. Off by default; see the dark-scene note below |
+| `rear_auto_gain_min` | `-1.0` | Auto gain lower limit in dB (`-1` leaves the camera's own limit) |
+| `rear_auto_gain_max` | `-1.0` | Auto gain upper limit in dB (`-1` leaves the camera's own limit; sensor allows 0–48) |
 | `rear_camera_frame_rate_hz` | `15.0` | Rear camera frame rate |
+| `rear_camera_use_ros_time` | `true` | Stamp rear images with ROS time on arrival. See the timestamp note below |
+| `rear_camera_ptp_enable` | `false` | Enable PTP on the rear cameras (needs a grandmaster) |
+| `rear_camera_{1,2,3}_frame_id` | `camera_rear_{1,2,3}` | TF frame per rear camera. **Needs mapping — see below** |
+| `rear_camera_{1,2,3}_info_url` | `` | Intrinsics per rear camera. Full `file://`/`package://` URL, absolute path, or a bare filename resolved against `config/`. Empty auto-selects the file matching that camera's `frame_id` |
 | `enable_zenohd` | `true` | Start rmw_zenohd |
 | `enable_map_odom_tf` | `true` | Enable dynamic `map -> odom` TF from NovAtel odom + GPS |
 | `map_use_fixed_reference` | `true` | Keep `map` anchored to fixed global LLA origin |
@@ -71,10 +78,89 @@ ros2 launch vehicle_platform system_bringup.launch.py
 | `config/camera_tr_arena_camera_node.intrinsics.yaml` | Rear top-right intrinsics |
 | `config/extrinsics.yaml` | Sensor extrinsic transforms |
 
+Rear camera intrinsics are only loaded when the matching
+`rear_camera_{1,2,3}_info_url` argument is set; see Camera topics below.
+
 ## Camera topics
 
 Front cameras publish under `/camera_fl/` and `/camera_fr/`.  
 Rear cameras publish under `/camera_rear_1/`, `/camera_rear_2/`, `/camera_rear_3/`.
+
+Each rear camera publishes `image` and `camera_info`. Full parameter reference
+for the rear cameras is in the [`arena_camera_node` README](../arena_camera_node/README.md);
+most settings can be changed while streaming:
+
+```bash
+ros2 param set /camera_rear_1/arena_camera_node auto_exposure_target 120.0
+```
+
+### Rear camera TF frames need mapping
+
+The calibrated frames in `config/extrinsics.yaml` are `camera_rc` (rear centre),
+`camera_tl` and `camera_tr` (top left/right), and matching intrinsics files
+exist for each. Which physical camera sits behind each IP has **not** been
+established — the device user IDs are just `1`, `2`, `3` — so
+`rear_camera_{1,2,3}_frame_id` default to `camera_rear_{1,2,3}` and the
+`_info_url` arguments default to empty.
+
+That is deliberate: a missing TF frame is a loud, diagnosable error, whereas a
+wrong one silently corrupts sensor fusion.
+
+Once the mapping is confirmed, **setting `frame_id` is enough** — the matching
+intrinsics file is picked up automatically, so the TF frame and the calibration
+cannot disagree:
+
+```bash
+ros2 launch vehicle_platform system_bringup.launch.py \
+  rear_camera_1_frame_id:=camera_rc \
+  rear_camera_2_frame_id:=camera_tl \
+  rear_camera_3_frame_id:=camera_tr
+```
+
+That resolves each camera to `config/<frame_id>_arena_camera_node.intrinsics.yaml`.
+Available files are `camera_rc`, `camera_tl` and `camera_tr`.
+
+To point a camera at a different calibration, `rear_camera_{1,2,3}_info_url`
+overrides the automatic choice and accepts any of:
+
+| Form | Example |
+|---|---|
+| Bare filename, resolved against `config/` | `camera_rc_arena_camera_node.intrinsics.yaml` |
+| Absolute path | `/home/avalocal/calib/rear1.yaml` |
+| Full URL | `file:///home/avalocal/calib/rear1.yaml`, `package://my_pkg/x.yaml` |
+
+If no calibration is found, launch logs a warning naming what to set, and
+`camera_info` is published uncalibrated (no rectification).
+
+### Camera startup failures
+
+If a rear camera is not reachable when its node starts (unplugged, wrong IP, or
+still booting), the node aborts rather than retrying. Check the node log before
+assuming a configuration problem.
+
+### Timestamps
+
+Rear camera images are stamped with ROS time on arrival. The camera clock
+counts from power-on and is unrelated to ROS time, so only set
+`rear_camera_use_ros_time:=false` once PTP is enabled *and* locked — otherwise
+stamps land in 1970 and break TF, `message_filters` sync, and bag replay.
+
+### Low light
+
+In an unlit space the rear cameras cannot reach any brightness target on
+exposure alone; measured mean pixel value was ~0 with auto gain off, versus
+~21 with `rear_auto_gain:=true` and `rear_auto_gain_max:=48.0`. Auto gain is
+off by default because it adds sensor noise, so enable it for night or indoor
+operation:
+
+```bash
+ros2 launch vehicle_platform system_bringup.launch.py \
+  rear_auto_gain:=true rear_auto_gain_max:=24.0
+```
+
+When the camera is pinned at both its exposure and gain ceilings, changing
+`rear_auto_exposure_target` has no effect — it is already giving everything it
+has.
 
 ## Building
 
