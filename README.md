@@ -22,6 +22,25 @@ source install/setup.bash
 ros2 launch vehicle_platform system_bringup.launch.py
 ```
 
+## Vehicle selection
+
+`system_bringup.launch.py` dispatches to a per-vehicle bringup. Each vehicle has its own calibration and sensor configs:
+
+| `vehicle` | Bringup | Configs (intrinsics, extrinsics, lidar params, Mako) | Cameras |
+|---|---|---|---|
+| `blue_jeep` (default) | `launch/vehicles/blue_jeep.launch.py` | `config/` | camera_fl, camera_fr, camera_rear_1..5 |
+| `white_jeep` | `launch/vehicles/white_jeep.launch.py` | `config/white_jeep_specific/` | camera_fl, camera_rear_1..3 (rc/tl/tr) |
+
+Select the vehicle per launch, or once per machine:
+
+```bash
+ros2 launch vehicle_platform system_bringup.launch.py vehicle:=white_jeep
+# or, in ~/.bashrc on that vehicle's computer:
+export VEHICLE_PLATFORM_VEHICLE=white_jeep
+```
+
+`extrinsics.launch.py` follows the same `vehicle` argument and environment variable. All other launch arguments pass through to the selected bringup. The rest of this README describes the blue jeep bringup. The variants `system_bringup_no_v2x`, `front_cameras_only` and `rear_cameras_only` are blue jeep only.
+
 ## Key launch arguments
 
 | Argument | Default | Description |
