@@ -425,7 +425,7 @@ def generate_launch_description():
     novatel_share = get_package_share_directory("novatel_oem7_driver")
     v2x_share = get_package_share_directory("v2x_ros_driver")
     dbw_share = get_package_share_directory("raptor_dbw_can")
-    rviz_default_config = os.path.join(vehicle_platform_share, "sample_file.rviz")
+    rviz_default_config = os.path.join(config_dir, "sample_file.rviz")
     camera_fl_info_default = "file://" + os.path.join(config_dir, "camera_fl.intrinsics.yaml")
     rear_camera_rc_info_default = "file://" + os.path.join(
         config_dir, "camera_rc_arena_camera_node.intrinsics.yaml"

@@ -29,7 +29,7 @@ ros2 launch vehicle_platform system_bringup.launch.py
 | `vehicle` | Bringup | Configs (intrinsics, extrinsics, lidar params, Mako) | Cameras |
 |---|---|---|---|
 | `blue_jeep` (default) | `launch/vehicles/blue_jeep.launch.py` | `config/` | camera_fl, camera_fr, camera_rear_1..5 |
-| `white_jeep` | `launch/vehicles/white_jeep.launch.py` | `config/white_jeep_specific/` | camera_fl, camera_rear_1..3 (rc/tl/tr) |
+| `white_jeep` | `launch/vehicles/white_jeep.launch.py` | `config/white_jeep_specific/` (also its own `sample_file.rviz`) | camera_fl, camera_rear_1..3 (rc/tl/tr) |
 
 Select the vehicle per launch, or once per machine:
 
